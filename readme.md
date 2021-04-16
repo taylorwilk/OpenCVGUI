@@ -4,5 +4,4 @@ OpenCV_GUI is a basic graphical user interface that allows users to load images 
 
 ## Authors
 
-Taylor Wilk
-Enoch Ikunda
+Taylor Wilk, Enoch Ikunda
