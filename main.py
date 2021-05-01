@@ -6,7 +6,7 @@ from matplotlib.figure import Figure
 
 import tkinter as tk
 from tkinter import ttk
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox, font
 
 import PIL
 from PIL import ImageTk, Image
@@ -32,7 +32,8 @@ def browse_img():
     global img_width
     global img_height
     filename = filedialog.askopenfilename(initialdir="Desktop", title="Select Image File", 
-            filetypes=(("JPEG files", "*.jpeg"),("JPG files", "*.jpg"),("PNG files", "*.png"),("ICON files", "*.icon"), ("All Files", "*.*")))
+            filetypes=(("JPEG files", "*.jpeg"),("JPG files", "*.jpg"),("PNG files", "*.png"),
+                        ("GIF files", "*.gif"),("ICON files", "*.ico"), ("All Files", "*.*")))
     img_path = filename
     # original_img is created to keep a referene to the unmodified image
     original_img = cv2.imread(filename, cv2.IMREAD_UNCHANGED)
@@ -44,7 +45,8 @@ def browse_img():
     # make sure image will fit in our workspace label frame
     check_img_dimension(img_height, img_width)
     
-
+# checks to make sure the image dimensions are within our labelFrame size
+# if not then the image dimensions are changed
 def check_img_dimension(height, width):
     global cv_img
     global img_width
@@ -128,7 +130,15 @@ class MainPage(tk.Frame):
             img = ImageTk.PhotoImage(image = Image.fromarray(cv_img))
             img_label = tk.Label(workspace, image=img)
             img_label.place(x = 0, y = 0)
-            
+            # once an image is loaded activate buttons
+            resize_button.config(state="normal")
+            rotate_button.config(state="normal")
+            blur_button.config(state="normal")
+            color_button.config(state="normal")
+            edge_detect_button.config(state="normal")
+            interest_point_button.config(state="normal")
+            revert_button.config(state="normal")
+            save_button.config(state="normal")
              
         def blur_img():
             global cv_img
@@ -138,7 +148,7 @@ class MainPage(tk.Frame):
             
             img = ImageTk.PhotoImage(image = Image.fromarray(cv_img))
             img_label = tk.Label(workspace, image=img)
-            img_label.grid(row=0, column=0)
+            img_label.place(x = 0, y = 0)
 
         # opens a new window for resizing image
         def open_resize_window():
@@ -210,17 +220,104 @@ class MainPage(tk.Frame):
             set_size = ttk.Button(custom, text="Set New Dimensions", width=15, command=set_new_size)
             set_size.grid(row=1, column=2, padx=10, pady=10)
 
-            resize = ttk.Button(top, text="Resize", width=15, state="disabled", command=resize_img)
+            resize = tk.Button(top, text="Resize", width=15, state="disabled", command=resize_img)
             resize.pack(side=tk.TOP, padx=10, pady=10)
-            resize.configure(disabledforeground="blue")
+
 
         def open_rotate_window():
             global cv_img
             global img_height
             global img_width
+            
+            top = tk.Toplevel()
+            frame = tk.Frame(top, width=290, height=200)
+            frame.pack()
+            top.title("Rotate Image")
+
+            def rotate_right():
+                global cv_img
+                global img
+                
+                cv_img = cv2.rotate(cv_img, cv2.ROTATE_90_CLOCKWISE)
+                
+                img = ImageTk.PhotoImage(image = Image.fromarray(cv_img))
+                img_label = tk.Label(workspace, image=img)
+                img_label.place(x=0, y=0) 
+
+            def flip_vertical():
+                global cv_img
+                global img
+                
+                cv_img = cv2.flip(cv_img, 0)
+                
+                img = ImageTk.PhotoImage(image = Image.fromarray(cv_img))
+                img_label = tk.Label(workspace, image=img)
+                img_label.place(x=0, y=0) 
+            
+            def flip_horizontal():
+                global cv_img
+                global img
+                
+                cv_img = cv2.flip(cv_img, 1)
+                
+                img = ImageTk.PhotoImage(image = Image.fromarray(cv_img))
+                img_label = tk.Label(workspace, image=img)
+                img_label.place(x=0, y=0) 
+
+            def rotate_left():
+                global cv_img
+                global img
+                
+                cv_img = cv2.rotate(cv_img, cv2.ROTATE_90_COUNTERCLOCKWISE)
+                
+                img = ImageTk.PhotoImage(image = Image.fromarray(cv_img))
+                img_label = tk.Label(workspace, image=img)
+                img_label.place(x=0, y=0) 
+
+            def back():
+                top.destroy()
+            
+            rotate_label = ttk.Label(frame, text="Rotate 90 Degrees")
+            rotate_label.place(x=90,y=18)
+
+            rotate_l_button = ttk.Button(frame, text="Left", width=8, command=rotate_left)
+            rotate_l_button.place(x=30,y=38)
+            
+            rotate_r_button = ttk.Button(frame, text="Right", width=8, command=rotate_right)
+            rotate_r_button.place(x=150,y=38)
+
+            flip_label = ttk.Label(frame, text="Flip")
+            flip_label.place(x=132,y=80)
+
+            flip_button = ttk.Button(frame, text="Vertical", width=8, command=flip_vertical)
+            flip_button.place(x=30,y=100)  
+
+            flip_button = ttk.Button(frame, text="Horizontal", width=8, command=flip_horizontal)
+            flip_button.place(x=150,y=100)
+
+            back_button = ttk.Button(frame, text="Back", width=4, command=back)
+            back_button.place(x=106,y=155)
+        
+        def open_edge_detection():
+            global cv_img
+            global img
 
             top = tk.Toplevel()
+            frame = tk.Frame(top, width=400, height=400)
+            frame.pack()
             top.title("Rotate Image")
+
+            options = [
+                "Sobel Edge Detection"
+                "Canny Edge Detection"
+                "Laplacian Edge Detection"
+            ]
+            clicked = tk.StringVar()
+            drop = tk.OptionMenu(top, clicked, options)
+            drop.pack()
+
+            but = ttk.Button(top, text="Show selection", command=show.pack())
+
 
         def revert_img():
             global cv_img
@@ -240,54 +337,60 @@ class MainPage(tk.Frame):
             
         def save_img():
             filename = filedialog.asksaveasfilename(initialdir="Desktop", title="Save Image", 
-                    filetypes=(("JPEG files", "*.jpeg"),("JPG files", "*.jpg"),("PNG files", "*.png"),("ICON files", "*.icon"), ("All Files", "*.*")))
+                    filetypes=(("JPEG files", "*.jpeg"),("JPG files", "*.jpg"),("PNG files", "*.png"),
+                                ("GIF files", "*.gif"), ("All Files", "*.*")))
             cv2.imwrite(filename, cv_img)
             messagebox.showinfo("Image Saved", "Image has been saved as " + os.path.basename(filename) + " successfully")
 
         pathName = tk.StringVar()
+        
+        main_background = tk.Frame(self)
+        main_background.pack(expand=True, fill="both")
 
-        label = tk.Label(self, text="OpenCV Image Editor", font = LARGE_FONT)  
+        label = tk.Label(main_background, text="OpenCV Image Editor", font = LARGE_FONT)  
         label.grid(row=0, column=0, columnspan=20, pady=10, padx=10, sticky="WE")
 
-        getting_started= tk.LabelFrame(self, text="Getting Started", borderwidth=3, relief= tk.SUNKEN)
+        getting_started= tk.LabelFrame(main_background, text="Getting Started", borderwidth=3, relief= tk.SUNKEN)
         getting_started.grid(row=1, column=0, columnspan=10, ipadx=30, padx=20, pady=20, sticky="NSEW")
         
         open_button = ttk.Button(getting_started, text="Open A New Image", width=15,
                             command=open_img)
         open_button.pack(anchor="center", pady=5)
 
-        image_ops = tk.LabelFrame(self, text="Image Operations", borderwidth=3, relief= tk.SUNKEN)
+        image_ops = tk.LabelFrame(main_background, text="Image Operations", borderwidth=3, relief= tk.SUNKEN)
         image_ops.grid(row=2, rowspan=39, column=0, columnspan=10, ipadx=30, ipady=200, padx=20, pady=20, stick="NSEW")
 
-        resize_button = ttk.Button(image_ops, text="Resize Image", width=15,
+        resize_button = ttk.Button(image_ops, text="Resize Image", width=15, state="disabled",
                             command=open_resize_window)
         resize_button.pack()
 
-        rotate_button = ttk.Button(image_ops, text="Rotate Image", width=15)
+        rotate_button = ttk.Button(image_ops, text="Rotate Image", width=15, state="disabled",
+                            command=open_rotate_window)
         rotate_button.pack()
-
-        blur_button = ttk.Button(image_ops, text="Blur Image", width=15,
+        
+        blur_button = ttk.Button(image_ops, text="Blur Image", width=15, state="disabled",
                             command=blur_img)
         blur_button.pack()
 
-        color_button = ttk.Button(image_ops, text="Change Image Color", width=15,)
+        color_button = ttk.Button(image_ops, text="Change Image Color", width=15, state="disabled",)
         color_button.pack()
 
-        edge_detect_button = ttk.Button(image_ops, text="Edge Detection", width=15,)
+        edge_detect_button = ttk.Button(image_ops, text="Edge Detection", width=15, state="disabled",
+                                command=open_edge_detection)
         edge_detect_button.pack()
 
-        interest_point_button = ttk.Button(image_ops, text="Find Interest Points", width=15,)
+        interest_point_button = ttk.Button(image_ops, text="Find Interest Points", width=15, state="disabled",)
         interest_point_button.pack()
 
-        save_button = ttk.Button(image_ops, text="Save Image", width=15, 
+        save_button = ttk.Button(image_ops, text="Save Image", width=15, state="disabled", 
                             command=save_img)
         save_button.pack(side=tk.BOTTOM)
 
-        revert_button = ttk.Button(image_ops, text="Revert To Original", width=15, 
+        revert_button = ttk.Button(image_ops, text="Revert To Original", width=15, state="disabled", 
                             command=revert_img)
-        revert_button.pack(side=tk.BOTTOM)
+        revert_button.pack(side=tk.BOTTOM, pady=10)
 
-        workspace = tk.LabelFrame(self, text="Workspace", borderwidth=3, relief= tk.SUNKEN)
+        workspace = tk.LabelFrame(main_background, text="Workspace", borderwidth=3, relief= tk.SUNKEN)
         workspace.grid(row=1, rowspan=40, column=10, columnspan=10, ipadx=550, ipady=350, padx=20, pady=20, sticky="NSEW")
         workspace.grid_propagate(False)
 
