@@ -17,6 +17,8 @@ img_path = ''
 img_width = ''
 img_height = ''
 img = ''
+screen_h = ''
+screen_w = ''
 
 # allow user to load an image and update global image variables
 def browse_img():
@@ -45,25 +47,28 @@ def check_img_dimension(height, width):
     global cv_img
     global img_width
     global img_height
-
-    if (width > 1090):
-        percent_decrease = 1090 / width
+    global screen_h
+    global screen_w
+    print (screen_h)
+    print (screen_w)
+    if (width > screen_w):
+        percent_decrease = screen_w / width
         img_height = img_height * percent_decrease
-        img_width = 1090
-        if (img_height > 700):
-            percent_decrease = 700 / img_height
+        img_width = screen_w
+        if (img_height > screen_h):
+            percent_decrease = screen_h / img_height
             img_width = img_width * percent_decrease
-            img_height = 700
+            img_height = screen_h
         cv_img = cv2.resize(cv_img, (int(img_width),int(img_height)), interpolation=cv2.INTER_AREA)
 
-    elif (height > 700):
-        percent_decrease = 700 / height
+    elif (height > screen_h):
+        percent_decrease = screen_h / height
         img_width = img_width * percent_decrease
-        img_height = 700
-        if (img_width > 1090):
-            percent_decrease = 1090 / img_width
+        img_height = screen_h
+        if (img_width > screen_w):
+            percent_decrease = screen_w / img_width
             img_height = img_height * percent_decrease
-            img_width = 1090
+            img_width = screen_w
         cv_img = cv2.resize(cv_img, (int(img_width),int(img_height)), interpolation=cv2.INTER_AREA)
 
 def check_img_color():
@@ -833,10 +838,14 @@ class MainPage(tk.Frame):
                             command=undo)
         undo_button.pack(side=tk.BOTTOM, pady=5)
 
-        screen_height = main_background.winfo_screenheight()
+        screen_height = int(main_background.winfo_screenheight() * .40)
+        screen_width = int(main_background.winfo_screenwidth() * .38)
         workspace = tk.LabelFrame(main_background, text="Workspace", borderwidth=3, relief= tk.SUNKEN)
-        workspace.grid(row=1, rowspan=50, column=10, columnspan=10, ipadx=550, ipady=screen_height-530, padx=20, pady=20, sticky="NSEW")
-        # original diminsions of workspace frame: ipadx=550, ipady=350
+        workspace.grid(row=1, rowspan=50, column=10, columnspan=10, ipadx=screen_width, ipady=screen_height, padx=20, pady=20, sticky="NSEW")
+        global screen_h 
+        global screen_w 
+        screen_h = int(workspace.winfo_screenheight()*.75)
+        screen_w = int(workspace.winfo_screenwidth()*.75)
         
         
 
