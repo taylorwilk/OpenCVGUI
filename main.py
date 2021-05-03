@@ -49,8 +49,7 @@ def check_img_dimension(height, width):
     global img_height
     global screen_h
     global screen_w
-    print (screen_h)
-    print (screen_w)
+    
     if (width > screen_w):
         percent_decrease = screen_w / width
         img_height = img_height * percent_decrease
@@ -768,7 +767,7 @@ class MainPage(tk.Frame):
         def save_img():
             filename = filedialog.asksaveasfilename(initialdir="Desktop", title="Save Image", 
                     filetypes=(("JPEG files", "*.jpeg"),("JPG files", "*.jpg"),("PNG files", "*.png"),
-                                ("GIF files", "*.gif"), ("All Files", "*.*")))
+                                ("GIF files", "*.gif")))
             cv2.imwrite(filename, cv_img)
             messagebox.showinfo("Image Saved", "Image has been saved as " + os.path.basename(filename) + " successfully")
 
@@ -838,8 +837,8 @@ class MainPage(tk.Frame):
                             command=undo)
         undo_button.pack(side=tk.BOTTOM, pady=5)
 
-        screen_height = int(main_background.winfo_screenheight() * .40)
-        screen_width = int(main_background.winfo_screenwidth() * .38)
+        screen_height = int(main_background.winfo_screenheight() * .38)
+        screen_width = int(main_background.winfo_screenwidth() * .36)
         workspace = tk.LabelFrame(main_background, text="Workspace", borderwidth=3, relief= tk.SUNKEN)
         workspace.grid(row=1, rowspan=50, column=10, columnspan=10, ipadx=screen_width, ipady=screen_height, padx=20, pady=20, sticky="NSEW")
         global screen_h 
