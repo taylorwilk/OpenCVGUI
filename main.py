@@ -168,18 +168,6 @@ class MainPage(tk.Frame):
             revert_button.config(state="normal")
             save_button.config(state="normal")
             undo_button.config(state="normal")
-             
-        def blur_img():
-            global cv_img
-            global img
-            global previous_img
-            previous_img.append(cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB))
-
-            cv_img = cv2.blur(cv_img, (5,5))
-            
-            img = ImageTk.PhotoImage(image = Image.fromarray(cv_img))
-            img_label = tk.Label(workspace, image=img)
-            img_label.place(x = 0, y = 0)
 
         # opens a new window for resizing image
         def open_resize_window():
@@ -356,7 +344,19 @@ class MainPage(tk.Frame):
 
             back_button = ttk.Button(top, text="Back", width=4, command=back)
             back_button.pack(pady=3)
-        
+
+        def blur_img():
+            global cv_img
+            global img
+            global previous_img
+            previous_img.append(cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB))
+
+            cv_img = cv2.blur(cv_img, (5,5))
+            
+            img = ImageTk.PhotoImage(image = Image.fromarray(cv_img))
+            img_label = tk.Label(workspace, image=img)
+            img_label.place(x = 0, y = 0)
+
         def open_change_color():
             global cv_img
             global img
@@ -592,7 +592,7 @@ class MainPage(tk.Frame):
             orb_frame = tk.LabelFrame(top, text="ORB Interest Point Detection", borderwidth=2)
             orb_frame.pack(fill="both", expand="yes", padx=10, pady=5)
 
-            threshold_label = tk.Label(orb_frame, text="Enter # Of Features To Keep:")
+            threshold_label = tk.Label(orb_frame, text="Enter Maximum # Of Features To Keep:")
             threshold_label.grid(sticky="w", row=0, column=0, columnspan=3, padx=5, pady=5)
 
             number_features=tk.StringVar()
@@ -806,7 +806,7 @@ class MainPage(tk.Frame):
                             command=blur_img)
         blur_button.pack(pady=5)
 
-        color_button = ttk.Button(image_ops, text="Change Image Color", width=18, state="disabled",
+        color_button = ttk.Button(image_ops, text="Change Colorspace", width=18, state="disabled",
                             command=open_change_color)
         color_button.pack(pady=5)
 
