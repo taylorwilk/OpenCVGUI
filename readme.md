@@ -197,7 +197,6 @@ We ourselves are relatively new to Tkinter and OpenCV, and regrettably there are
     * Once an image is converted to black and white using thresholding, it is no longer possible to change the image's colorspace unless the *Undo Last Operation* command is performed.
     * Once an image is converted to black and white using thresholding, it is no longer possible to perform *Edge Detection, Find Interest Points,* or *Connected Components*.
     * The execution of *Edge Detection* also converts the image to black and white.  This creates the same limitations as above.
-    * 
 
 * Image Resizing Issue
     * When an image is resized to dimensions that are larger than the workspace window frame, the boarder of the workspace window disappears.  If the image is then reduced to a size that fits within these dimensions the boarder does not re-appear.
