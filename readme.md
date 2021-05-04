@@ -12,7 +12,7 @@ The overall goal of this project was to create a desktop-based software that is 
 
 ## **Materials and Methods**
 
-This project is written in Python and utilizes the Tkinter GUI package.  Tkinter is a Python binding to the Tk GUI toolkit. It is the standard Python interface to the Tk GUI toolkit and is Python's de facto standard GUI. Tkinter is included with standard Linux, Microsoft Windows and Mac OS X installs of Python.
+This project is written in Python and utilizes the Tkinter GUI package.  Tkinter is Python binding to the Tcl/Tk GUI toolkit. It is the standard Python interface to the Tk GUI toolkit and is Python's de facto standard GUI. Tkinter is included with standard Linux, Microsoft Windows and Mac OS X installs of Python.
 
 Other Python packages that are used to assist in image augmentation are NumPy, OS, PIL (Python Imaging Library), and OpenCV.
 
