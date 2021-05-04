@@ -10,6 +10,7 @@ import cv2
 LARGE_FONT = ("Verdana", 24)
 original_img = ''
 current_color = ''
+prev_color = ''
 cv_img = ''
 previous_img = []
 img_path = ''
@@ -71,23 +72,30 @@ def check_img_dimension(height, width):
 def check_img_color():
     global cv_img
     global current_color
+    global prev_color
 
     if (current_color == "GRAY"):
+        prev_color = "GRAY"
         cv_img = cv2.cvtColor(cv_img, cv2.COLOR_GRAY2BGR)
         current_color = "BRG"
     elif (current_color == "HSV"):
+        prev_color = "HSV"
         cv_img = cv2.cvtColor(cv_img, cv2.COLOR_HSV2BGR)
         current_color = "BRG"
     elif (current_color == "HLS"):
+        prev_color = "HLS"
         cv_img = cv2.cvtColor(cv_img, cv2.COLOR_HLS2BGR)
         current_color = "BRG"
     elif (current_color == "LUV"):
+        prev_color = "LUV"
         cv_img = cv2.cvtColor(cv_img, cv2.COLOR_LUV2BGR)
         current_color = "BRG"
     elif (current_color == "YUV"):
+        prev_color = "YUV"
         cv_img = cv2.cvtColor(cv_img, cv2.COLOR_YUV2BGR)
         current_color = "BRG"
     elif (current_color == "LAB"):
+        prev_color = "LAB"
         cv_img = cv2.cvtColor(cv_img, cv2.COLOR_LAB2RGB)
         current_color = "BRG"
             
@@ -148,9 +156,13 @@ class MainPage(tk.Frame):
         def open_img():
             global cv_img
             global img
+            global prev_color
             browse_img()
             
             cv_img = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
+            previous_img.append(cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB))
+            prev_color = "BGR"
+            
             img = ImageTk.PhotoImage(image = Image.fromarray(cv_img))
             img_label = tk.Label(workspace, image=img)
             img_label.place(x = 0, y = 0)
@@ -366,8 +378,10 @@ class MainPage(tk.Frame):
                 global img
                 global previous_img
                 global current_color
-                check_img_color()
+                
                 previous_img.append(cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB))
+                prev_color = "GRAY"
+                check_img_color()
 
                 cv_img = cv2.cvtColor(cv_img, cv2.COLOR_BGR2GRAY)
                 current_color = "GRAY"
@@ -731,8 +745,9 @@ class MainPage(tk.Frame):
             global img_height
             global img_width
             global img
-
+            check_img_color()
             cv_img = previous_img.pop(-1)
+    
             img_width = int(cv_img.shape[1])
             img_height = int(cv_img.shape[0])
             check_img_dimension(img_height, img_width)
