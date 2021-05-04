@@ -28,7 +28,7 @@ def browse_img():
     filename = filedialog.askopenfilename(initialdir="Desktop", title="Select Image File", 
             filetypes=(("JPEG files", "*.jpeg"),("JPG files", "*.jpg"),("PNG files", "*.png"),
                         ("GIF files", "*.gif"),("ICON files", "*.ico"), ("All Files", "*.*")))
-                        
+
     # original_img is created to keep a referene to the unmodified image
     original_img = cv2.imread(filename, cv2.IMREAD_UNCHANGED)
     # this is the image we will modify
@@ -763,9 +763,11 @@ class MainPage(tk.Frame):
             img_label.place(x = 0, y = 0)
             
         def save_img():
+            global cv_img
             filename = filedialog.asksaveasfilename(initialdir="Desktop", title="Save Image", 
                     filetypes=(("JPEG files", "*.jpeg"),("JPG files", "*.jpg"),("PNG files", "*.png"),
                                 ("GIF files", "*.gif")))
+            cv_img = cv2.cvtColor(cv_img, cv2.COLOR_RGB2BGR)       
             cv2.imwrite(filename, cv_img)
             messagebox.showinfo("Image Saved", "Image has been saved as " + os.path.basename(filename) + " successfully")
 
