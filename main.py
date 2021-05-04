@@ -8,7 +8,6 @@ import os
 import cv2
 
 LARGE_FONT = ("Verdana", 24)
-REGULAR_FONT = ("Verdana", 16)
 original_img = ''
 current_color = ''
 cv_img = ''
@@ -24,13 +23,12 @@ screen_w = ''
 def browse_img():
     global original_img
     global cv_img
-    global img_path
     global img_width
     global img_height
     filename = filedialog.askopenfilename(initialdir="Desktop", title="Select Image File", 
             filetypes=(("JPEG files", "*.jpeg"),("JPG files", "*.jpg"),("PNG files", "*.png"),
                         ("GIF files", "*.gif"),("ICON files", "*.ico"), ("All Files", "*.*")))
-    img_path = filename
+                        
     # original_img is created to keep a referene to the unmodified image
     original_img = cv2.imread(filename, cv2.IMREAD_UNCHANGED)
     # this is the image we will modify
@@ -51,21 +49,21 @@ def check_img_dimension(height, width):
     global screen_w
     
     if (width > screen_w):
-        percent_decrease = screen_w / width
+        percent_decrease = (screen_w-20) / width
         img_height = img_height * percent_decrease
         img_width = screen_w
         if (img_height > screen_h):
-            percent_decrease = screen_h / img_height
+            percent_decrease = (screen_h-20) / img_height
             img_width = img_width * percent_decrease
             img_height = screen_h
         cv_img = cv2.resize(cv_img, (int(img_width),int(img_height)), interpolation=cv2.INTER_AREA)
 
     elif (height > screen_h):
-        percent_decrease = screen_h / height
+        percent_decrease = (screen_h-20) / height
         img_width = img_width * percent_decrease
         img_height = screen_h
         if (img_width > screen_w):
-            percent_decrease = screen_w / img_width
+            percent_decrease = (screen_w-20) / img_width
             img_height = img_height * percent_decrease
             img_width = screen_w
         cv_img = cv2.resize(cv_img, (int(img_width),int(img_height)), interpolation=cv2.INTER_AREA)
@@ -837,8 +835,8 @@ class MainPage(tk.Frame):
                             command=undo)
         undo_button.pack(side=tk.BOTTOM, pady=5)
 
-        screen_height = int(main_background.winfo_screenheight() * .38)
-        screen_width = int(main_background.winfo_screenwidth() * .36)
+        screen_height = int(main_background.winfo_screenheight() * .4)
+        screen_width = int(main_background.winfo_screenwidth() * .38)
         workspace = tk.LabelFrame(main_background, text="Workspace", borderwidth=3, relief= tk.SUNKEN)
         workspace.grid(row=1, rowspan=50, column=10, columnspan=10, ipadx=screen_width, ipady=screen_height, padx=20, pady=20, sticky="NSEW")
         global screen_h 

@@ -21,7 +21,7 @@ Other Python packages that are used to assist in image augmentation are NumPy, O
 * Open A New Image
     *  Prompts the user to open an image file from their local machine.
     *  Supported image format include JPEG, JPG, GIF, ICON, and PNG.
-    *  If the image is bigger than the workspace display window then it is resized to fit within the window size.  The original dimensions of the image are stored.  This can be used later when saving an edited image if the user wants it to be resized back to its original dimensions.
+    *  If the image is bigger than the workspace display window then it is resized to fit within the window size.
     *  An original copy of the image will also be stored in case the user wants to revert back to the original image at any time.
     *  All other buttons will be disabled until an image is opened.
 * Resize Image
